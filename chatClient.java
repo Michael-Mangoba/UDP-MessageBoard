@@ -32,10 +32,13 @@ public class chatClient
                 DatagramPacket DpSend =
                   new DatagramPacket(buf, buf.length, ip, Port);
                 ds.send(DpSend);
-
-                DpReceive = new DatagramPacket(receive, receive.length);
-                ds.receive(DpReceive);
-                System.out.println("Server: " + data(receive));
+                boolean recieved = false;
+                while(!recieved){
+                    DpReceive = new DatagramPacket(receive, receive.length);
+                    ds.receive(DpReceive);
+                    System.out.println("Server: " + data(receive));
+                    
+                }
             }
             // convert the String input into the byte array.
             buf = inp.getBytes();
@@ -46,6 +49,8 @@ public class chatClient
   
             // break the loop if user enters "bye"
             if (inp.equals("bye"))
+                sc.close();
+                ds.close();
                 break;
         }
     }
