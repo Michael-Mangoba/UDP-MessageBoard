@@ -1,0 +1,8 @@
+//json file with list of commands and parameters for chat
+
+{"command":"join"},
+{"command":"leave"},
+{"command":"register", "handle":"<handle>" },
+{"command":"all", "message":"<message>"},
+{"command":"msg", "handle":"<handle>", "message":"<message>"},
+{"command":"error", "message":"<error_message>"},
