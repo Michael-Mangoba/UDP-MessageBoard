@@ -1,62 +1,58 @@
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.SocketException;
-  
-public class chatServer
-{
-    public static void main(String[] args) throws IOException
-    {
-        // Step 1 : Create a socket to listen at port 1234
-        InetAddress newIp = InetAddress.getLocalHost();
-        DatagramSocket ds = new DatagramSocket(1234);
-        byte[] receive = new byte[65535];
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
-        byte buf[] = null;
-        System.out.println(newIp);
-        DatagramPacket DpReceive = null;
-        while (true)
-        {
-          // Step 2 : create a DatgramPacket to receive the data.
-            DpReceive = new DatagramPacket(receive, receive.length);
-  
-            // Step 3 : revieve the data in byte buffer.
-            ds.receive(DpReceive);
-            if(data(receive).equals("/join")){
-                buf = "Connection to the Message Board Server is successful!".getBytes();
-                DatagramPacket DpSend = new DatagramPacket(buf, buf.length, newIp, 1234);
-                ds.send(DpSend);
+public class chatServer extends Thread {
+    public final static int PORT = 7331;
+    private final static int BUFFER = 1024;
+    
+    private DatagramSocket socket;
+    private ArrayList<InetAddress> clientAddresses;
+    private ArrayList<Integer> clientPorts;
+    private HashSet<String> existingClients;
+    public chatServer() throws IOException {
+        socket = new DatagramSocket(PORT);
+        clientAddresses = new ArrayList();
+        clientPorts = new ArrayList();
+        existingClients = new HashSet();
+    }
+    
+    public void run() {
+        byte[] buf = new byte[BUFFER];
+        while (true) {
+            try {
+                Arrays.fill(buf, (byte)0);
+                DatagramPacket packet = new DatagramPacket(buf, buf.length);
+                socket.receive(packet);
+                
+                String content = new String(buf, buf.length);
+                
+                InetAddress clientAddress = packet.getAddress();
+                int clientPort = packet.getPort();
+                
+                String id = clientAddress.toString() + "," + clientPort;
+                if (!existingClients.contains(id)) {
+                    existingClients.add( id );
+                    clientPorts.add( clientPort );
+                    clientAddresses.add(clientAddress);
+                }
+                
+                System.out.println(id + " : " + content);
+                byte[] data = (id + " : " +  content).getBytes();
+                for (int i=0; i < clientAddresses.size(); i++) {
+                    InetAddress cl = clientAddresses.get(i);
+                    int cp = clientPorts.get(i);
+                    packet = new DatagramPacket(data, data.length, cl, cp);
+                    socket.send(packet);
+                }
+            } catch(Exception e) {
+                System.err.println(e);
             }
-            System.out.println("Client:-" + data(receive));
-  
-            // Exit the server if the client sends "bye"
-            if (data(receive).toString().equals("bye"))
-            {
-                System.out.println("Client sent bye.....EXITING");
-                ds.close();
-                break;
-            }
-  
-            // Clear the buffer after every message.
-            receive = new byte[65535];
         }
     }
-  
-    // A utility method to convert the byte array
-    // data into a string representation.
-    public static StringBuilder data(byte[] a)
-    {
-        if (a == null)
-            return null;
-        StringBuilder ret = new StringBuilder();
-        int i = 0;
-        while (a[i] != 0)
-        {
-            ret.append((char) a[i]);
-            i++;
-        }
-        return ret;
+    
+    public static void main(String args[]) throws Exception {
+        chatServer s = new chatServer();
+        s.start();
     }
 }

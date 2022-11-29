@@ -1,76 +1,80 @@
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.util.Scanner;
-  
-public class chatClient
-{
-    public static String Address;
-    public static Integer Port;
-    public static void main(String args[]) throws IOException
-    {
-        Scanner sc = new Scanner(System.in);
-  
-        // Step 1:Create the socket object for
-        // carrying the data.
-        DatagramSocket ds = new DatagramSocket();
-  
-        InetAddress ip = InetAddress.getByName(Address);
-        byte buf[] = null;
-        DatagramPacket DpReceive = null;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
-        byte[] receive = new byte[65535];
-        // loop while user not enters "bye"
-        while (true)
-        {
-            String inp = sc.nextLine();
-            String[] command = inp.split(" ");
-            if(command[0].equals("/join")){
-                connect(command);
-                buf = command[0].getBytes();
-                DatagramPacket DpSend =
-                  new DatagramPacket(buf, buf.length, ip, Port);
-                ds.send(DpSend);
-                boolean recieved = false;
-                while(!recieved){
-                    DpReceive = new DatagramPacket(receive, receive.length);
-                    ds.receive(DpReceive);
-                    System.out.println("Server: " + data(receive));
-                    
-                }
+
+class MessageSender implements Runnable {
+    public final static int PORT = 7331;
+    private DatagramSocket sock;
+    private String hostname;
+    MessageSender(DatagramSocket s, String h) {
+        sock = s;
+        hostname = h;
+    }
+    private void sendMessage(String s) throws Exception {
+        byte buf[] = s.getBytes();
+        InetAddress address = InetAddress.getByName(hostname);
+        DatagramPacket packet = new DatagramPacket(buf, buf.length, address, PORT);
+        sock.send(packet);
+    }
+    public void run() {
+        boolean connected = false;
+        do {
+            try {
+                sendMessage("GREETINGS");
+                connected = true;
+            } catch (Exception e) {
+                
             }
-            // convert the String input into the byte array.
-            buf = inp.getBytes();
-  
-            // Step 2 : Create the datagramPacket for sending
-            // the data.
-            ;
-  
-            // break the loop if user enters "bye"
-            if (inp.equals("bye"))
-                sc.close();
-                ds.close();
-                break;
+        } while (!connected);
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        while (true) {
+            try {
+                while (!in.ready()) {
+                    Thread.sleep(100);
+                }
+                sendMessage(in.readLine());
+            } catch(Exception e) {
+                System.err.println(e);
+            }
         }
     }
-
-    private static void connect(String[] input){
-        Address = input[1];
-        Port = Integer.parseInt(input[2]);
+}
+class MessageReceiver implements Runnable {
+    DatagramSocket sock;
+    byte buf[];
+    MessageReceiver(DatagramSocket s) {
+        sock = s;
+        buf = new byte[1024];
     }
-
-    public static StringBuilder data(byte[] a)
-    {
-        if (a == null)
-            return null;
-        StringBuilder ret = new StringBuilder();
-        int i = 0;
-        while (a[i] != 0)
-        {
-            ret.append((char) a[i]);
-            i++;
+    public void run() {
+        while (true) {
+            try {
+                DatagramPacket packet = new DatagramPacket(buf, buf.length);
+                sock.receive(packet);
+                String received = new String(packet.getData(), 0, packet.getLength());
+                System.out.println(received);
+            } catch(Exception e) {
+                System.err.println(e);
+            }
         }
-        return ret;
+    }
+}
+public class chatClient {
+    
+    public static void main(String args[]) throws Exception {
+        String host = null;
+        if (args.length < 1) {
+            System.out.println("Usage: java ChatClient <server_hostname>");
+            System.exit(0);
+        } else {
+            host = args[0];
+        }
+        DatagramSocket socket = new DatagramSocket();
+        MessageReceiver r = new MessageReceiver(socket);
+        MessageSender s = new MessageSender(socket, host);
+        Thread rt = new Thread(r);
+        Thread st = new Thread(s);
+        rt.start(); st.start();
     }
 }
