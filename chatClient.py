@@ -35,7 +35,8 @@ while True:
         while True:
             if command == "/register":
                 name = enter.split()[1]
-                payload = {"command": "register", "handle": {name}}
+                payload = {"command": "register"}
+                payload["handle"] = name
                 client.sendto(str.encode(json.dumps(payload)), (host, port))
 
                 while True:
@@ -51,13 +52,16 @@ while True:
                     elif command == "/all":
                         recipient = "all"
                         message = enter.split(" ", 1)[1]
-                        payload = {"command": "all", "message": {message}}
-                        client.sendto(str.encode(json.dumps(list(payload))), (host, port))
+                        payload = {"command": "all"}
+                        payload["message"] = message
+                        client.sendto(str.encode(json.dumps(payload)), (host, port))
                     elif command == "/msg":
                         recipient = enter.split()[1]
                         message = enter.split(" ", 2)[2]
-                        payload = {"command": "msg", "handle": {recipient}, "message": {message}}
-                        client.sendto(str.encode(json.dumps(list(payload))), (host, port))
+                        payload = {"command": "msg"}
+                        payload["handle"] = recipient
+                        payload["message"] = message
+                        client.sendto(str.encode(json.dumps(payload)), (host, port))
 
             elif command == "/leave":
                 payload = {"command": "leave"}
