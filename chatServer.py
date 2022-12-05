@@ -7,7 +7,7 @@ messages = queue.Queue()
 clients = []
 Buffer = 1024
 UDP_Host_IP = "localhost"
-UDP_Host_Port = 3333
+UDP_Host_Port = 8888
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server.bind((UDP_Host_IP, UDP_Host_Port))
@@ -31,7 +31,7 @@ def read():
             content = ""
             host, port = addr
             print("System Recieved: " + data.decode() + "\n")
-            print("Sender Info: " + host + " " + port + "\n")
+            print("Sender Info: " + host + " " + str(port) + "\n")
         
             if message["command"] == "join":
                 if addr not in clients:
