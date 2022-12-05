@@ -37,7 +37,7 @@ def read():
                 reply = {'message':'received'}
 
 t1 = threading.Thread(target=receive)
-t2 = threading.Thread(targer=read)
+t2 = threading.Thread(target=read)
 
 t1.start()
 t2.start()
