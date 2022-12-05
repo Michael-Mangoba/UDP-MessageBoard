@@ -5,6 +5,7 @@ import json
 
 messages = queue.Queue()
 clients = []
+handles = []
 Buffer = 1024
 UDP_Host_IP = "localhost"
 UDP_Host_Port = 8888
@@ -36,6 +37,7 @@ def read():
             if message["command"] == "join":
                 if addr not in clients:
                     clients.append(addr)
+                    handles.append("")
                 content = "Connection to the Message BoardServer is successful!"
                 reply = {'message': content}
                 server.sendto(str.encode(json.dumps(reply)), addr)
@@ -44,6 +46,18 @@ def read():
                 content = "Connection closed. Thank you!"
                 reply = {'message': content}
                 server.sendto(str.encode(json.dumps(reply)), addr)
+            elif message["command"] == "register":
+                if message["handle"] not in handles:
+                    index = clients.index(addr)
+                    handles[index] = message["handle"]
+                    newHandle = message["handle"]
+                    content = "Welcome {}".format(newHandle)
+                    reply = {'message': content}
+                    server.sendto(str.encode(json.dumps(reply)), addr)
+                else:
+                    content = "Error: Registration failed. Handle or alias already exists."
+                    reply = {'message': content}
+                    server.sendto(str.encode(json.dumps(reply)), addr)
             else:
                 reply = {'message':'received'}
                 server.sendto(str.encode(json.dumps(reply)), addr)
