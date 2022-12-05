@@ -6,10 +6,12 @@ import json
 messages = queue.Queue()
 clients = []
 Buffer = 1024
+UDP_Host_IP = "localhost"
+UDP_Host_Port = 9999
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-server.bind(("localhost", 2222))
-print(socket.gethostbyname("localhost"))
+server.bind((UDP_Host_IP, UDP_Host_Port))
+print(socket.gethostbyname(UDP_Host_IP))
 
 def receive():
     while True:
