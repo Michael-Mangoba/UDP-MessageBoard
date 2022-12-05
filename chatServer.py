@@ -1,6 +1,7 @@
 import socket
 import threading
 import queue
+import json
 
 messages = queue.Queue()
 clients = []
@@ -13,7 +14,7 @@ def receive():
     while True:
         try:
             message, addr = server.recvfrom(1024)
-            messages.put((messages, addr))
+            messages.put((message, addr))
         except:
             pass
 
@@ -22,21 +23,17 @@ def read():
     while True:
         while not messages.empty():
             data, addr = messages.get()
-            message = data.decode().strip()[1:].split(" ")
-            print(message[1] + " " + message[2])
-            
-            if message[0] == "/join":
+            message = json.loads(data.decode())
+            reply = {}
+            print("System Recieved: " + data.decode() + "\n")
+        
+            if message["command"] == "join":
                 if addr not in clients:
                     clients.append(addr)
-            for client in clients:
-                try:
-                    if message.decode()[1:].startswith("/join"):
-                        name = message.decode()[message.decode().index(":")+1]
-                        server.sendto(f"{name} joined", client)
-                    else:
-                        server.sendto(message)
-                except:
-                    clients.remove(client)
+                reply = {'message':"connected"}
+                server.sendto(reply, addr)
+            else:
+                reply = {'message':'received'}
 
 t1 = threading.Thread(target=receive)
 t2 = threading.Thread(targer=read)
