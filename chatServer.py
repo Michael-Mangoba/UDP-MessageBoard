@@ -29,9 +29,9 @@ def read():
             message = json.loads(data.decode())
             reply = {}
             content = ""
-            ip, port = addr.decode()
+            host, port = addr
             print("System Recieved: " + data.decode() + "\n")
-            print("Sender Info: " + ip + " " + port + "\n")
+            print("Sender Info: " + host + " " + port + "\n")
         
             if message["command"] == "join":
                 if addr not in clients:
