@@ -7,7 +7,7 @@ messages = queue.Queue()
 clients = []
 Buffer = 1024
 UDP_Host_IP = "localhost"
-UDP_Host_Port = 9999
+UDP_Host_Port = 3333
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server.bind((UDP_Host_IP, UDP_Host_Port))
