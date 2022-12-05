@@ -10,7 +10,8 @@ def receive():
     while True:
         try:
             msg, _ = client.recvfrom(1024)
-            print(msg.decode())
+            message = json.loads(msg.decode())
+            print(message)
         except:
             pass
 
@@ -35,7 +36,7 @@ while True:
             if command == "/register":
                 name = enter.split()[1]
                 payload = {"command": "register", "handle": {name}}
-                client.sendto(str.encode(json.dumps(list(payload))), (host, port))
+                client.sendto(str.encode(json.dumps(payload)), (host, port))
 
                 while True:
                     enter = input("Command: ")
