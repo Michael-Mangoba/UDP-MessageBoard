@@ -37,7 +37,7 @@ def read():
                 reply = {'message': content}
                 server.sendto(reply, addr)
             elif ["command"] == "leave":
-                clients.remove(client)
+                clients.remove(addr)
                 content = "Connection closed. Thank you!"
                 reply = {'message': content}
                 server.sendto(reply, addr)
