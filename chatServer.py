@@ -5,6 +5,7 @@ import json
 
 messages = queue.Queue()
 clients = []
+Buffer = 1024
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server.bind(("localhost", 9999))
@@ -13,7 +14,7 @@ server.bind(("localhost", 9999))
 def receive():
     while True:
         try:
-            message, addr = server.recvfrom(1024)
+            message, addr = server.recvfrom(Buffer)
             messages.put((message, addr))
         except:
             pass
