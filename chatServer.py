@@ -37,14 +37,15 @@ def read():
                     clients.append(addr)
                 content = "Connection to the Message BoardServer is successful!"
                 reply = {'message': content}
-                server.sendto(reply, addr)
+                server.sendto(str.encode(json.dumps(reply)), addr)
             elif ["command"] == "leave":
                 clients.remove(addr)
                 content = "Connection closed. Thank you!"
                 reply = {'message': content}
-                server.sendto(reply, addr)
+                server.sendto(str.encode(json.dumps(reply)), addr)
             else:
                 reply = {'message':'received'}
+                server.sendto(str.encode(json.dumps(reply)), addr)
 
 t1 = threading.Thread(target=receive)
 t2 = threading.Thread(target=read)
