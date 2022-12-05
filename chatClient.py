@@ -66,6 +66,10 @@ while True:
                         payload["message"] = message
                         client.sendto(str.encode(json.dumps(payload)), (host, port))
                         time.sleep(0.5)
+                    else:
+                        payload = {"command": "random"}
+                        client.sendto(str.encode(json.dumps(payload)), (host, port))
+                        time.sleep(0.5)
 
             elif command == "/leave":
                 payload = {"command": "leave"}
@@ -74,11 +78,13 @@ while True:
             elif command == "/?":
                 print("lol")
             else:
-                print("register first")
+                payload = {"command": "random"}
+                client.sendto(str.encode(json.dumps(payload)), (host, port))
+                time.sleep(0.5)
 
     elif command == "/leave":
-        exit()
+        print("Error: Disconnection failed. Please connect to the server first.")
     elif command == "/?":
         print("lol")
     else:
-        print(enter, "join first")
+        print("Error: Command not found.")
