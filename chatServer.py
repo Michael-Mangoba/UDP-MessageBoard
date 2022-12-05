@@ -42,6 +42,8 @@ def read():
                 reply = {'message': content}
                 server.sendto(str.encode(json.dumps(reply)), addr)
             elif message["command"] == "leave":
+                index = clients.index(addr)
+                handles.pop(index)
                 clients.remove(addr)
                 content = "Connection closed. Thank you!"
                 reply = {'message': content}
