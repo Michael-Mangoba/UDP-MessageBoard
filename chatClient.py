@@ -4,6 +4,13 @@ import random
 import json
 import time
 
+# To do:
+# - add timeout in client side
+# - fix loop when join unsuccessful
+# - fix loop when register unsuccessful
+# - try catch when error
+# - /? print syntax commands
+
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 def receive():
@@ -76,15 +83,27 @@ while True:
                 client.sendto(str.encode(json.dumps(payload)), (host, port))
                 exit()
             elif command == "/?":
-                print("lol")
+                        print("/join to connect to a chatroom")
+                        print("/leave to disconnect from a chatroom")
+                        print("/register to register a handle")
+                        print("/all to send a message to all users")
+                        print("/msg to send a message to a specific user")
+                        print("/? to show help menu")
             else:
                 payload = {"command": "random"}
                 client.sendto(str.encode(json.dumps(payload)), (host, port))
                 time.sleep(0.5)
-
     elif command == "/leave":
         print("Error: Disconnection failed. Please connect to the server first.")
     elif command == "/?":
-        print("lol")
+        #show help menu
+        print("--- here are the following commands ---")
+        print("/join to connect to a chatroom")
+        print("/leave to disconnect from a chatroom")
+        print("/register to register a handle")
+        print("/all to send a message to all users")
+        print("/msg to send a message to a specific user")
+        print("/? to show help menu")
     else:
         print("Error: Command not found.")
+
