@@ -35,11 +35,12 @@ def read():
         
             if message["command"] == "join":
                 if addr not in clients:
-                    clients.append(addr)
+                    client = {addr, ''}
+                    clients.append(client)
                 content = "Connection to the Message BoardServer is successful!"
                 reply = {'message': content}
                 server.sendto(str.encode(json.dumps(reply)), addr)
-            elif ["command"] == "leave":
+            elif message["command"] == "leave":
                 clients.remove(addr)
                 content = "Connection closed. Thank you!"
                 reply = {'message': content}
