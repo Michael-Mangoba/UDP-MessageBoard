@@ -26,13 +26,20 @@ def read():
             data, addr = messages.get()
             message = json.loads(data.decode())
             reply = {}
+            content = ""
             print("System Recieved: " + data.decode() + "\n")
             print("Sender Info: " + addr.decode() + "\n")
         
             if message["command"] == "join":
                 if addr not in clients:
                     clients.append(addr)
-                reply = {'message':"connected"}
+                content = "Connection to the Message BoardServer is successful!"
+                reply = {'message': content}
+                server.sendto(reply, addr)
+            elif ["command"] == "leave":
+                clients.remove(client)
+                content = "Connection closed. Thank you!"
+                reply = {'message': content}
                 server.sendto(reply, addr)
             else:
                 reply = {'message':'received'}
