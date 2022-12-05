@@ -9,7 +9,7 @@ Buffer = 1024
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server.bind(("localhost", 9999))
-
+print(socket.gethostbyname("localhost"))
 
 def receive():
     while True:
