@@ -8,7 +8,7 @@ clients = []
 Buffer = 1024
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-server.bind(("localhost", 9999))
+server.bind(("localhost", 2222))
 print(socket.gethostbyname("localhost"))
 
 def receive():
