@@ -3,6 +3,7 @@ import threading
 import random
 import json
 import time
+import select
 
 # To do:
 # - add timeout in client side
@@ -12,6 +13,11 @@ import time
 # - /? print syntax commands
 
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+#declare a global variable for determining if join is successful
+join = False
+#declare a global variable for determining if register is successful
+register = False
 
 def receive():
     while True:
@@ -107,3 +113,40 @@ while True:
     else:
         print("Error: Command not found.")
 
+# # Create a UDP socket
+# sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# # Set a timeout of 5 seconds
+# timeout = 5
+
+# # Bind the socket to a local address and port
+# sock.bind(('localhost', 10000))
+
+# # Enter the chat room loop
+# while True:
+#     # Wait for data on the socket with the specified timeout
+#     ready = select.select([sock], [], [], timeout)
+
+#     # Check if there is data available on the socket
+#     if ready[0]:
+#         # Receive data from the socket
+#         data, addr = sock.recvfrom(1024)
+
+#         # Print the received data
+#         print(f'Received: {data} from {addr}')
+
+#     # Check if the timeout has expired
+#     else:
+#         # Print a message indicating that no data was received
+#         print('No data received')
+
+#         # Leave the chat room
+#         break
+#  the timeout variable specifies the timeout in seconds. 
+# The select.select() function is used to wait for data on the socket with the specified timeout.
+#  If data is received on the socket within the specified timeout, 
+#  it is printed to the screen. 
+#  If the timeout expires without any data being received, 
+#  a message is printed to the screen indicating that no data was received, 
+#  and the chat room loop is terminated.
+# # Close the socket
