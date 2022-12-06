@@ -8,7 +8,7 @@ clients = []
 handles = []
 Buffer = 1024
 UDP_Host_IP = "localhost"
-UDP_Host_Port = 2020
+UDP_Host_Port = 3030
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server.bind((UDP_Host_IP, UDP_Host_Port))

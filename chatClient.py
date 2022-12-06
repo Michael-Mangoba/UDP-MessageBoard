@@ -39,7 +39,7 @@ def receive():
 
 
 while run is True:
-    enter = input("Command: ")
+    enter = input("")
     command = enter.split()[0]
 
     if command == "/join":
@@ -54,7 +54,7 @@ while run is True:
             time.sleep(0.5)
 
             while join is True:
-                enter = input("Command: ")
+                enter = input("")
                 command = enter.split()[0]
 
                 if command == "/register":
@@ -65,7 +65,7 @@ while run is True:
                     time.sleep(0.5)
 
                     while register is True:
-                        enter = input("Command: ")
+                        enter = input("")
                         command = enter.split()[0]
 
                         if command == "/leave":
