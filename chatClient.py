@@ -37,7 +37,7 @@ def receive():
         except:
             pass
 
-
+print('START INPUT:')
 while run is True:
     enter = input("")
     command = enter.split()[0]
