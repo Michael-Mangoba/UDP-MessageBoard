@@ -15,8 +15,10 @@ import select
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 #declare a global variable for determining if join is successful
+global join
 join = False
 #declare a global variable for determining if register is successful
+global register
 register = False
 
 def receive():
@@ -25,6 +27,12 @@ def receive():
             msg, _ = client.recvfrom(1024)
             message = json.loads(msg.decode())
             print(message['message'])
+            if message['message'] == "Connection to the Message BoardServer is successful!":
+                global join
+                join = True
+            elif message['message'] != "Error: Registration failed. Handle or alias already exists.":
+                global register
+                register = True
         except:
             pass
 
@@ -43,7 +51,7 @@ while True:
         client.sendto(str.encode(json.dumps(payload)), (host, port))
         time.sleep(0.5)
 
-        while True:
+        while join is True:
             enter = input("Command: ")
             command = enter.split()[0]
 
@@ -54,7 +62,7 @@ while True:
                 client.sendto(str.encode(json.dumps(payload)), (host, port))
                 time.sleep(0.5)
 
-                while True:
+                while register is True:
                     enter = input("Command: ")
                     command = enter.split()[0]
 
