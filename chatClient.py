@@ -68,50 +68,59 @@ while run is True:
 
                 #user should register after joining
                 if command == "/register":
-                    name = enter.split()[1]
-                    payload = {"command": "register"}
-                    payload["handle"] = name
-                    client.sendto(str.encode(json.dumps(payload)), (host, port))
-                    time.sleep(0.5)
+                    try:
+                        name = enter.split()[1]
+                        print(name)
+                        payload = {"command": "register"}
+                        payload["handle"] = name
+                        client.sendto(str.encode(json.dumps(payload)), (host, port))
+                        time.sleep(0.5)
 
-                    while register is True:
-                        enter = input("")
-                        command = enter.split()[0]
+                        while register is True:
+                            enter = input("")
+                            command = enter.split()[0]
 
-                        if command == "/leave":
-                            payload = {"command": "leave"}
-                            client.sendto(str.encode(json.dumps(payload)), (host, port))
-                            time.sleep(0.5)
-                            join = False
-                            register = False
-                            run = False
-                        elif command == "/?":
-                            print("/join to connect to a chatroom")
-                            print("/leave to disconnect from a chatroom")
-                            print("/register to register a handle")
-                            print("/all to send a message to all users")
-                            print("/msg to send a message to a specific user")
-                            print("/? to show help menu")
-                        elif command == "/all":
-                            recipient = "all"
-                            message = enter.split(" ", 1)[1]
-                            payload = {"command": "all"}
-                            payload["message"] = message
-                            client.sendto(str.encode(json.dumps(payload)), (host, port))
-                            time.sleep(0.5)
-                        elif command == "/msg":
-                            recipient = enter.split()[1]
-                            message = enter.split(" ", 2)[2]
-                            payload = {"command": "msg"}
-                            payload["handle"] = recipient
-                            payload["message"] = message
-                            client.sendto(str.encode(json.dumps(payload)), (host, port))
-                            time.sleep(0.5)
-                        else:
-                            payload = {"command": "random"}
-                            client.sendto(str.encode(json.dumps(payload)), (host, port))
-                            time.sleep(0.5)
-
+                            if command == "/leave":
+                                payload = {"command": "leave"}
+                                client.sendto(str.encode(json.dumps(payload)), (host, port))
+                                time.sleep(0.5)
+                                join = False
+                                register = False
+                                run = False
+                            elif command == "/?":
+                                print("/join to connect to a chatroom")
+                                print("/leave to disconnect from a chatroom")
+                                print("/register to register a handle")
+                                print("/all to send a message to all users")
+                                print("/msg to send a message to a specific user")
+                                print("/? to show help menu")
+                            elif command == "/all":
+                                recipient = "all"
+                                try:
+                                    message = enter.split(" ", 1)[1]
+                                    payload = {"command": "all"}
+                                    payload["message"] = message
+                                    client.sendto(str.encode(json.dumps(payload)), (host, port))
+                                    time.sleep(0.5)
+                                except:
+                                    print('Error: Unsuccesful sending of message.')
+                            elif command == "/msg":
+                                try:
+                                    recipient = enter.split()[1]
+                                    message = enter.split(" ", 2)[2]
+                                    payload = {"command": "msg"}
+                                    payload["handle"] = recipient
+                                    payload["message"] = message
+                                    client.sendto(str.encode(json.dumps(payload)), (host, port))
+                                    time.sleep(0.5)
+                                except:
+                                    print('Error: Unsuccesful sending of message.')
+                            else:
+                                payload = {"command": "random"}
+                                client.sendto(str.encode(json.dumps(payload)), (host, port))
+                                time.sleep(0.5)
+                    except:
+                        print('Error: Unsuccessful register.')
                 elif command == "/leave":
                     payload = {"command": "leave"}
                     client.sendto(str.encode(json.dumps(payload)), (host, port))
