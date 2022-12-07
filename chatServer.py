@@ -55,9 +55,6 @@ def read():
                     server.sendto(str.encode(json.dumps(reply)), addr)
 #Register
                 elif message["command"] == "register":
-                    if addr not in clients:
-                        clients.append(addr)
-                        handles.append("")
                     if message["handle"] not in handles:
                         index = clients.index(addr)
                         handles[index] = message["handle"]
