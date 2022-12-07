@@ -70,7 +70,7 @@ def read():
 #Message All Function
                 elif message["command"] == "all":
                     index = clients.index(addr)
-                    content = "{}: {}".format(handles[index], message["message"])
+                    content = "From {}: {}".format(handles[index], message["message"])
                     reply = {'message': content}
                     for client in clients:
                         server.sendto(str.encode(json.dumps(reply)), client)
@@ -78,7 +78,7 @@ def read():
                 elif message["command"] == "msg":
                     try:
                         SenderIndex = clients.index(addr)
-                        ReceiverIndex = clients.index(message["handle"])
+                        ReceiverIndex = handles.index(message["handle"])
 
                         content = "From {}: {}".format(handles[SenderIndex], message["message"])
                         reply = {'message': content}
