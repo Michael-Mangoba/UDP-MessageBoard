@@ -30,7 +30,7 @@ def receive():
             print(message['message'])
 
             # global variable for checking whether joining is successful
-            if message['message'] == "Connection to the Message BoardServer is successful!":
+            if message['message'] == "Connection to the Message Board Server is successful!":
                 global join
                 join = True
             #global variable for checking whether register is successful
