@@ -42,7 +42,7 @@ def read():
                     if addr not in clients:
                         clients.append(addr)
                         handles.append("")
-                    content = "Connection to the Message BoardServer is successful!"
+                    content = "Connection to the Message Board Server is successful!"
                     reply = {'message': content}
                     server.sendto(str.encode(json.dumps(reply)), addr)
 #Leave Function
