@@ -17,6 +17,24 @@ register = False
 
 run = True
 
+
+# Set the timeout to 5 seconds
+client.settimeout(5)
+
+while True:
+    try:
+        # Receive a message from the server
+        msg, _ = client.recvfrom(1024)
+        message = json.loads(msg.decode())
+        print(message['message'])
+
+        # Handle the received message
+
+    except socket.timeout:
+        # If no data is received within the timeout, raise an error
+        raise RuntimeError("Connection to server lost. No data received within the timeout period.")
+
+
 def receive():
     while True:
         try:
