@@ -37,15 +37,15 @@ def read():
             print("System Recieved: " + data.decode() + "\n")
             print("Sender Info: " + host + " " + str(port) + "\n")
             try:
-#Join Function
+#Join
                 if message["command"] == "join":
                     if addr not in clients:
                         clients.append(addr)
                         handles.append("")
-                    content = "Connection to the Message BoardServer is successful!"
-                    reply = {'message': content}
+                    content = "Connection to the Message Board Server is successful!"
+                    reply = {'command': 'join', 'message': content}
                     server.sendto(str.encode(json.dumps(reply)), addr)
-#Leave Function
+#Leave
                 elif message["command"] == "leave":
                     index = clients.index(addr)
                     handles.pop(index)
@@ -53,8 +53,11 @@ def read():
                     content = "Connection closed. Thank you!"
                     reply = {'message': content}
                     server.sendto(str.encode(json.dumps(reply)), addr)
-#Register Function
+#Register
                 elif message["command"] == "register":
+                    if addr not in clients:
+                        clients.append(addr)
+                        handles.append("")
                     if message["handle"] not in handles:
                         index = clients.index(addr)
                         handles[index] = message["handle"]
@@ -65,36 +68,36 @@ def read():
     #Existing Alias Error
                     else:
                         content = "Error: Registration failed. Handle or alias already exists."
-                        error = {'message': content}
+                        error = {'command': 'error', 'message': content}
                         server.sendto(str.encode(json.dumps(error)), addr)
-#Message All Function
+#Message All
                 elif message["command"] == "all":
                     index = clients.index(addr)
                     content = "{}: {}".format(handles[index], message["message"])
                     reply = {'message': content}
                     for client in clients:
                         server.sendto(str.encode(json.dumps(reply)), client)
-#Direct Message Function
+#Direct Message
                 elif message["command"] == "msg":
                     try:
                         SenderIndex = clients.index(addr)
-                        ReceiverIndex = clients.index(message["handle"])
+                        ReceiverIndex = handles.index(message["handle"])
 
-                        content = "From {}: {}".format(handles[SenderIndex], message["message"])
+                        content = "[From {}]: {}".format(handles[SenderIndex], message["message"])
                         reply = {'message': content}
                         server.sendto(str.encode(json.dumps(reply)), clients[ReceiverIndex])
 
-                        notifContent = "To {}: {}".format(handles[ReceiverIndex], message["message"])
+                        notifContent = "[To {}]: {}".format(handles[ReceiverIndex], message["message"])
                         notif = {'message': notifContent}
                         server.sendto(str.encode(json.dumps(notif)), addr)   
     #Invalid Handle Error          
                     except:
                         content = "Error: Handle or alias not found."
-                        error = {'message': content}
+                        error = {'command': 'error', 'message': content}
                         server.sendto(str.encode(json.dumps(error)), addr)
     #Invalid Command Error
                 else:
-                    error = {'message':'Error: Command not found.'}
+                    error = {'command': 'error', 'message':'Error: Command not found.'}
                     server.sendto(str.encode(json.dumps(error)), addr)
     #Invalid Parameters Error
             except:

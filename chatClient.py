@@ -3,7 +3,6 @@ import threading
 import random
 import json
 import time
-import select
 
 # To do:
 # - add timeout in client side
@@ -20,6 +19,7 @@ join = False
 #declare a global variable for determining if register is successful
 global register
 register = False
+
 run = True
 
 def receive():
@@ -28,12 +28,16 @@ def receive():
             msg, _ = client.recvfrom(1024)
             message = json.loads(msg.decode())
             print(message['message'])
-            if message['message'] == "Connection to the Message BoardServer is successful!":
+
+            # global variable for checking whether joining is successful
+            if message['message'] == "Connection to the Message Board Server is successful!":
                 global join
                 join = True
+            #global variable for checking whether register is successful
             elif message['message'] != "Error: Registration failed. Handle or alias already exists.":
                 global register
                 register = True
+
         except:
             pass
 
@@ -42,6 +46,7 @@ while run is True:
     enter = input("")
     command = enter.split()[0]
 
+    #first command should be join to connect to the server
     if command == "/join":
         try:
             host = enter.split()[1]
@@ -57,6 +62,7 @@ while run is True:
                 enter = input("")
                 command = enter.split()[0]
 
+                #user should register after joining
                 if command == "/register":
                     name = enter.split()[1]
                     payload = {"command": "register"}
@@ -76,7 +82,12 @@ while run is True:
                             register = False
                             run = False
                         elif command == "/?":
-                            print("lol")
+                            print("/join to connect to a chatroom")
+                            print("/leave to disconnect from a chatroom")
+                            print("/register to register a handle")
+                            print("/all to send a message to all users")
+                            print("/msg to send a message to a specific user")
+                            print("/? to show help menu")
                         elif command == "/all":
                             recipient = "all"
                             message = enter.split(" ", 1)[1]
