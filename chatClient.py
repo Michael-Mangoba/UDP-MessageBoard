@@ -4,12 +4,7 @@ import random
 import json
 import time
 
-# To do:
-# - add timeout in client side
-# - fix loop when join unsuccessful
-# - fix loop when register unsuccessful
-# - try catch when error
-# - /? print syntax commands
+
 
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
