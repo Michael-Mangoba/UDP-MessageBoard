@@ -18,8 +18,8 @@ register = False
 run = True
 
 
-# Set the timeout to 5 seconds
-client.settimeout(5)
+# Set the timeout to 60 seconds
+client.settimeout(60)
 
 def receive():
     while True:
