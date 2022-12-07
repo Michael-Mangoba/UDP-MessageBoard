@@ -19,6 +19,7 @@ run = True
 
 
 # Set the timeout to 60 seconds
+# this will detect if the server has stopped running after 60 seconds
 client.settimeout(60)
 
 def receive():
