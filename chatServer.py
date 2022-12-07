@@ -51,7 +51,7 @@ def read():
                     handles.pop(index)
                     clients.remove(addr)
                     content = "Connection closed. Thank you!"
-                    reply = {'message': content}
+                    reply = {'command': 'leave', 'message': content}
                     server.sendto(str.encode(json.dumps(reply)), addr)
 #Register
                 elif message["command"] == "register":
@@ -63,7 +63,7 @@ def read():
                         handles[index] = message["handle"]
                         newHandle = message["handle"]
                         content = "Welcome {}!".format(newHandle)
-                        reply = {'message': content}
+                        reply = {'command': 'register', 'message': content}
                         server.sendto(str.encode(json.dumps(reply)), addr)
     #Existing Alias Error
                     else:
@@ -74,7 +74,7 @@ def read():
                 elif message["command"] == "all":
                     index = clients.index(addr)
                     content = "{}: {}".format(handles[index], message["message"])
-                    reply = {'message': content}
+                    reply = {'command': 'all', 'message': content}
                     for client in clients:
                         server.sendto(str.encode(json.dumps(reply)), client)
 #Direct Message
@@ -84,11 +84,11 @@ def read():
                         ReceiverIndex = handles.index(message["handle"])
 
                         content = "[From {}]: {}".format(handles[SenderIndex], message["message"])
-                        reply = {'message': content}
+                        reply = {'command': 'msg', 'message': content}
                         server.sendto(str.encode(json.dumps(reply)), clients[ReceiverIndex])
 
                         notifContent = "[To {}]: {}".format(handles[ReceiverIndex], message["message"])
-                        notif = {'message': notifContent}
+                        notif = {'command': 'msg', 'message': notifContent}
                         server.sendto(str.encode(json.dumps(notif)), addr)   
     #Invalid Handle Error          
                     except:
@@ -101,7 +101,7 @@ def read():
                     server.sendto(str.encode(json.dumps(error)), addr)
     #Invalid Parameters Error
             except:
-                error = {'message':'Error: Command parameters do not match or is not allowed.'}
+                error = {'command': 'error', 'message':'Error: Command parameters do not match or is not allowed.'}
 
 t1 = threading.Thread(target=receive)
 t2 = threading.Thread(target=read)
